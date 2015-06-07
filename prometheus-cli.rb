@@ -3,16 +3,29 @@ require 'json'
 require 'open-uri'
 
 API_URL = 'http://packages.altlinux.org/api'
+BRANCH_PATH = '/branches'
+BUG_PATH = '/bugs'
 SRPM_PATH = '/srpms'
 
 class App < Thor
-  desc 'hello', 'Hello world'
-  def hello
-    puts "Hello world"
+  desc 'branches', 'Show branches info'
+  def branches
   end
 
   desc 'bug ID', 'Show bug ID info'
   def bug(id)
+    url = "#{ API_URL }#{ BUG_PATH }/#{ id }.json"
+    data = JSON.parse(open(url).read)
+
+    puts "Bug info for ID: #{ data['bug_id'] }"
+    puts "Description: #{ data['short_desc'] }"
+    puts "Status: #{ data['bug_status'] }"
+    puts "Resolution: #{ data['resolution'] }" if data['resolution']
+    puts "Severity: #{ data['bug_severity'] }"
+    puts "Product: #{ data['product'] }"
+    puts "Component: #{ data['component'] }"
+    puts "Assigned to: #{ data['assigned_to'] }"
+    puts "Reported by: #{ data['reporter'] }"
   end
 
   desc 'srpm NAME', 'Show srpm info for NAME'
